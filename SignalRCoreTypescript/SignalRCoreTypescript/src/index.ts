@@ -1,42 +1,78 @@
 ﻿import "./css/main.css";
 import * as signalR from "@aspnet/signalr";
 
-const divMessages: HTMLDivElement = document.querySelector("#divMessages");
-const tbMessage: HTMLInputElement = document.querySelector("#tbMessage");
-const btnSend: HTMLButtonElement = document.querySelector("#btnSend");
+class Main {
+    readonly divMessages: HTMLDivElement = document.querySelector("#divMessages");
+    readonly tbMessage: HTMLInputElement = document.querySelector("#tbMessage");
+    readonly btnSend: HTMLButtonElement = document.querySelector("#btnSend");
 
-const tbRoom: HTMLInputElement = document.querySelector("#tbRoom");
-const btnJoin: HTMLButtonElement = document.querySelector("#btnJoin");
-const btnLeave: HTMLButtonElement = document.querySelector("#btnLeave");
-const username = new Date().getTime();
+    readonly tbRoom: HTMLInputElement = document.querySelector("#tbRoom");
+    readonly btnJoin: HTMLButtonElement = document.querySelector("#btnJoin");
+    readonly btnLeave: HTMLButtonElement = document.querySelector("#btnLeave");
 
-const connection = new signalR.HubConnectionBuilder()
-    .withUrl("https://localhost:8000/hub")
-    .build();
+    readonly connection: signalR.HubConnection
 
-connection.start().catch(err => document.write(err));
+    private lastId: string = '0-0'
+    private roomName: string = ''
 
-connection.on("messageReceived", (username: string, message: string) => {
-    let m = document.createElement("div");
+    constructor() {
+        this.connection = new signalR.HubConnectionBuilder()
+            .withUrl("https://localhost:8000/hub")
+            .build();
 
-    m.innerHTML =
-        `<div class="message-author">${username}</div><div>${message}</div>`;
+        this.connection.start().catch(err => document.write(err));
 
-    divMessages.appendChild(m);
-    divMessages.scrollTop = divMessages.scrollHeight;
-});
+        this.connection.on("messageReceived", (id: string, username: string, message: string) => {
+            let m = document.createElement("div");
 
-tbMessage.addEventListener("keyup", (e: KeyboardEvent) => {
-    if (e.keyCode === 13) {
-        send();
+            m.innerHTML =
+                `<div class="message-author">${id}</div><div>${message}</div>`;
+
+            this.divMessages.appendChild(m);
+            this.divMessages.scrollTop = this.divMessages.scrollHeight;
+            this.lastId = this.maxSequenceNumber(this.lastId, id);
+        });
+
+        this.tbMessage.addEventListener("keyup", (e: KeyboardEvent) => {
+            if (e.keyCode === 13) {
+                this.send();
+            }
+        });
+
+        this.btnSend.addEventListener("click", this.send);
+        this.btnJoin.addEventListener("click", this.joinRoom);
+        this.btnLeave.addEventListener("click", () => this.connection.send("leaveRoom", this.roomName));
     }
-});
 
-btnSend.addEventListener("click", send);
-btnJoin.addEventListener("click", () => connection.send("joinRoom", tbRoom.value));
-btnLeave.addEventListener("click", () => connection.send("leaveRoom", tbRoom.value));
+    send = () => {
+        this.connection.send("newMessage", this.roomName, '', this.tbMessage.value)
+            .then(() => this.tbMessage.value = "");
+    }
 
-function send() {
-    connection.send("newMessage", tbRoom.value, username, tbMessage.value)
-        .then(() => tbMessage.value = "");
+    joinRoom = () => {
+        this.roomName = this.tbRoom.value;
+        this.divMessages.innerHTML = '';
+        this.connection.send("joinRoom", this.roomName);
+        this.tbRoom.value = '';
+    }
+
+    maxSequenceNumber(first: string, second: string): string {
+        let firstMilli = parseInt(first.split('-')[0]);
+        let secondMilli = parseInt(second.split('-')[0]);
+        if (firstMilli == secondMilli) {
+            let firstSequence = parseInt(first.split('-')[1]);
+            let secondSequence = parseInt(second.split('-')[1]);
+            return firstSequence > secondSequence ? first : second;
+        }
+        return firstMilli > secondMilli ? first : second;
+    }
 }
+
+let m = new Main();
+
+
+
+
+
+
+

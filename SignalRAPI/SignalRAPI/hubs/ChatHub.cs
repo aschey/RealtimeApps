@@ -21,8 +21,8 @@ namespace SignalRAPI.hubs
 
         public async Task JoinRoom(string roomName)
         {
-            
             await Groups.AddToGroupAsync(Context.ConnectionId, roomName);
+            GetAll(roomName);
         }
 
         public async Task LeaveRoom(string roomName)
@@ -40,6 +40,17 @@ namespace SignalRAPI.hubs
                 };
             Redis.Write(fields);
         }
-        
+
+        public void GetAll(string roomName)
+        {
+            var messages = Redis.ReadAll().Result;
+            foreach(var message in messages)
+            {
+                if (message.Values[0].Value == roomName)
+                {
+                    Clients.Client(Context.ConnectionId).SendAsync("messageReceived", message.Id, message.Values[2].Name, message.Values[2].Value);
+                }
+            }
+        }
     }
 }
