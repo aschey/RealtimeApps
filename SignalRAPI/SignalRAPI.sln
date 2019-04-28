@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalRAPI", "SignalRAPI\SignalRAPI.csproj", "{0F48B844-E357-43FF-B84E-01326068DDBE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0F48B844-E357-43FF-B84E-01326068DDBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F48B844-E357-43FF-B84E-01326068DDBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F48B844-E357-43FF-B84E-01326068DDBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F48B844-E357-43FF-B84E-01326068DDBE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E4D96158-9F14-47B6-8500-1F58E338CF8C}
+	EndGlobalSection
+EndGlobal
