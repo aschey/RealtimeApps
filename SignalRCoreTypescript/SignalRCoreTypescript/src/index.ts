@@ -20,7 +20,7 @@ class Main {
             .withUrl("https://localhost:8000/hub")
             .build();
 
-        this.connection.start().catch(err => document.write(err));
+        this.connection.start().then(() => this.autoSend()).catch(err => document.write(err));
 
         this.connection.on("messageReceived", (id: string, username: string, message: string) => {
             let m = document.createElement("div");
@@ -48,6 +48,21 @@ class Main {
         this.connection.send("newMessage", this.roomName, '', this.tbMessage.value)
             .then(() => this.tbMessage.value = "");
     }
+
+    autoSend = async () => {
+        await this.connection.send("joinRoom", "room1")
+        let num = 0;
+        this.roomName = "room1";
+        while (true) {
+            this.connection.send("newMessage", this.roomName, '', 'test' + num);
+            num++;
+            await this.delay(1000);
+        }
+    }
+
+    delay(ms: number) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+}
 
     joinRoom = () => {
         this.roomName = this.tbRoom.value;
