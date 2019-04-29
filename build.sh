@@ -1,2 +1,2 @@
- docker build -f SignalRAPI/SignalRAPI/Dockerfile SignalRAPI/
- docker build -f SignalRCoreTypescript/SignalRCoreTypescript/Dockerfile SignalRCoreTypescript/
+ docker build -f SignalRAPI/SignalRAPI/Dockerfile SignalRAPI/ -t signalr-api:dev
+ docker build -f SignalRCoreTypescript/SignalRCoreTypescript/Dockerfile SignalRCoreTypescript/ -t signalr-core-typescript:dev
