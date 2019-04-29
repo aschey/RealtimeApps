@@ -26,28 +26,22 @@ namespace SignalRAPI
             _consumerId = Guid.NewGuid();
             var result = _conn.GetDatabase().Execute("XGROUP", "CREATE", "messages", $"consumer-{_consumerId}", "$", "MKSTREAM");
 
-            _asyncPolicy = Policy.Handle<Exception>().WaitAndRetryAsync(10, retryAttempt => TimeSpan.FromSeconds(3), onRetry: (exception, retryCount) =>
+            _asyncPolicy = Policy.Handle<Exception>().WaitAndRetryAsync(10, retryAttempt => TimeSpan.FromSeconds(3), onRetry: (exception, retryTime, retryCount, retryContext) =>
             {
                 //_conn = Connect();
                 Console.WriteLine($"Redis retry: {retryCount}");
             });
 
-            _policy = Policy.Handle<Exception>().WaitAndRetry(10, retryAttempt => TimeSpan.FromSeconds(3), onRetry: (exception, retryCount) =>
+            _policy = Policy.Handle<Exception>().WaitAndRetry(10, retryAttempt => TimeSpan.FromSeconds(3), onRetry: (exception, retryTime, retryCount, retryContext) =>
             {
                 //_conn = Connect();
                 Console.WriteLine($"Redis retry: {retryCount}");
             });
-
-            //Policy.Handle<RedisConnectionException>().WaitAndRetry(10, retryAttempt => TimeSpan.FromSeconds(3), onRetry: (exception, retryCount) =>
-            //{
-            //    //_conn = Connect();
-            //    Console.WriteLine($"Redis retry: {retryCount}");
-            //});
         }
 
         private static ConnectionMultiplexer Connect()
         {
-            var opt = new ConfigurationOptions { AllowAdmin = true, SyncTimeout = 10000, ConnectTimeout = 10000 };
+            var opt = new ConfigurationOptions { AllowAdmin = true };
 
             for (var i = 0; i < 6; i++)
             {
