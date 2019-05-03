@@ -17,7 +17,7 @@ class Main {
 
     constructor() {
         this.connection = new signalR.HubConnectionBuilder()
-            .withUrl("https://localhost:8000/hub")
+            .withUrl("http://localhost:8000/hub")
             .build();
 
         this.connection.start().then(() => this.autoSend()).catch(err => document.write(err));

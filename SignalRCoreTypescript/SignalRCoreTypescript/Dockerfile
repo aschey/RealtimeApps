@@ -14,6 +14,7 @@ RUN dotnet build "SignalRCoreTypescript.csproj" -c Release -o /app
 FROM node:12.0 AS node-build
 COPY --from=build /src /src
 WORKDIR /src/SignalRCoreTypescript
+RUN npm install
 RUN npm run release
 
 FROM build AS publish

@@ -8,3 +8,13 @@ services:
     image: signalr-core-typescript:dev
     ports:
       - 5000:5000
+  redis-cluster:
+    image: redis-cluster:dev
+    environment:
+     IP: ${REDIS_CLUSTER_IP}
+     SENTINEL: ${REDIS_USE_SENTINEL}
+     STANDALONE: ${REDIS_USE_STANDALONE}
+    hostname: server
+    ports:
+      - '7000-7007:7000-7007'
+      #- '5000-5002:5000-5002'
