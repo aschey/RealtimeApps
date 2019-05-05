@@ -48,11 +48,11 @@ namespace SignalRAPI
             {
                 opt.EndPoints.Add(EndPointCollection.TryParse($"redis-cluster:700{i}"));
             }
-            for (var i = 0; i < 4; i++) {
-                opt.EndPoints.Add(EndPointCollection.TryParse($"redis-cluster:500{i}"));
-            }
 
-            return ConnectionMultiplexer.Connect(opt);
+            return _policy.Execute(() => {
+                return ConnectionMultiplexer.Connect(opt);
+            });
+            
         }
 
         public static void Subscribe(Action handler)
