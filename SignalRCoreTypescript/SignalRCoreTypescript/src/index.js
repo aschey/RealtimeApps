@@ -81,7 +81,7 @@ var Main = /** @class */ (function () {
             _this.tbRoom.value = '';
         };
         this.connection = new signalR.HubConnectionBuilder()
-            .withUrl("https://localhost:8000/hub")
+            .withUrl("http://localhost:8000/hub")
             .build();
         this.connection.start().then(function () { return _this.autoSend(); }).catch(function (err) { return document.write(err); });
         this.connection.on("messageReceived", function (id, username, message) {

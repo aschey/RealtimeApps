@@ -44,6 +44,9 @@ namespace SignalRAPI.hubs
         public void GetAll(string roomName)
         {
             var messages = Redis.ReadAll().Result;
+            if (messages == null) {
+                return;
+            }
             foreach(var message in messages)
             {
                 if (message.Values[0].Value == roomName)

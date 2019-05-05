@@ -22,6 +22,9 @@ namespace SignalRAPI
         private async void OnUpdate()
         {
             var messages = await Redis.Read();
+            if (messages == null) {
+                return;
+            }
             foreach(var message in messages)
             {
                 await _hubContext.Clients.Group(message.Values[0].Value).SendAsync("messageReceived", message.Id, message.Values[2].Name, message.Values[2].Value);

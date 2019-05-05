@@ -17,7 +17,7 @@ class Main {
 
     constructor() {
         this.connection = new signalR.HubConnectionBuilder()
-            .withUrl("https://localhost:8000/hub")
+            .withUrl("http://localhost:8000/hub")
             .build();
 
         this.connection.start().then(() => this.autoSend()).catch(err => document.write(err));
@@ -29,6 +29,9 @@ class Main {
                 `<div class="message-author">${id}</div><div>${message}</div>`;
 
             this.divMessages.appendChild(m);
+            if (this.divMessages.children.length > 500) {
+                this.divMessages.removeChild(this.divMessages.children[0]);
+            }
             this.divMessages.scrollTop = this.divMessages.scrollHeight;
             this.lastId = this.maxSequenceNumber(this.lastId, id);
         });

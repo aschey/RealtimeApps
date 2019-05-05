@@ -7,4 +7,20 @@ services:
   site:
     image: signalr-core-typescript:dev
     ports:
-      - 5000:5000
+      - 5050:5050
+  redis-cluster:
+    image: redis-cluster:dev
+    ports:
+      - 5000-5002:5000-5002
+      - 7000-7005:7000-7005
+    environment:
+      - SENTINEL=true
+  portainer:
+    image: portainer/portainer:1.20.2
+    ports:
+      - 9000:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainerdata:/data
+volumes:
+  portainerdata:

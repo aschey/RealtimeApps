@@ -31,7 +31,7 @@ namespace SignalRAPI
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
-                    builder => builder.WithOrigins("https://localhost:5000")
+                    builder => builder.WithOrigins("http://localhost:5050")
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials());
@@ -64,7 +64,7 @@ namespace SignalRAPI
 
                 
             //});
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseMvc();
             //var test = await ChatService.Crea
         }
